@@ -134,6 +134,11 @@ export const constantRouterMap = [
             name: 'HardwarePrinterIndex',
             component: () => import('@/views/hardware/printer/Index')
           },
+          {
+            path: '/hardware/camera/index',
+            name: 'HardwareCameraIndex',
+            component: () => import('@/views/hardware/camera/Index')
+          }
         ]  
       },
       {

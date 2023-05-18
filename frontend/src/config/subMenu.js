@@ -114,6 +114,12 @@ export default {
       title: '打印机',
       pageName: 'HardwarePrinterIndex',
       params: {}
+		},
+		'menu_101' : {
+			icon: 'profile',
+			title: '摄像头',
+			pageName: 'HardwareCameraIndex',
+			params: {}
 		}                                               
   },
   effect: {
