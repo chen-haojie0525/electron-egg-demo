@@ -1,27 +1,21 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+  <ConfigProvider :locale="getAntdLocale">
+    <AppProvider>
+      <RouterView />
+    </AppProvider>
+  </ConfigProvider>
 </template>
 
-<script>
-export default {
-  name: 'App',
-  components: {},
-  data() {
-    return {};
-  },
-  watch: {},
-  methods: {}
-}
+<script lang="ts" setup>
+  import { ConfigProvider } from 'ant-design-vue';
+  import { AppProvider } from '@/components/Application';
+  import { useTitle } from '@/hooks/web/useTitle';
+  import { useLocale } from '@/locales/useLocale';
+  import 'dayjs/locale/zh-cn';
+
+  // support Multi-language
+  const { getAntdLocale } = useLocale();
+
+  // Listening to page changes and dynamically changing site titles
+  useTitle();
 </script>
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  height: 100%;
-}
-</style>
