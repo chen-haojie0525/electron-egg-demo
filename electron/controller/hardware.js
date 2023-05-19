@@ -81,6 +81,8 @@ class HardwareController extends Controller {
         console.log('takePhoto faild')
       } else {
         console.log('photo is successfully saved, path:' + phototakePath)
+        const channel = 'controller.hardware.cameraStatus';
+        event.reply(`${channel}`, { phototakePath });
       }
     })
 

@@ -2,7 +2,7 @@
   <div id="app-hw-bluetooth">
     <div class="one-block-1">
       <span>
-        当前设备: {{currentCamera ? currentCamera.label : '--'}}
+        1. 当前设备: {{currentCamera ? currentCamera.label : '--'}}
       </span>
     </div>  
     <div class="one-block-2">
@@ -12,6 +12,11 @@
     <div class="one-block-2">
       <video ref="video" width="350" height="225" autoplay></video>
     </div>
+    <div class="one-block-1">
+      <span>
+        2. 保存路径: {{savePath || '--'}}
+      </span>
+    </div>  
     <div class="one-block-2">
       <a-button @click="doShot(0)"> 抓拍 </a-button>
     </div>
@@ -27,6 +32,7 @@ export default {
   data() {
     return {
       currentCamera: '',
+      savePath: '',
       cameraList: []
     };
   },
@@ -36,10 +42,10 @@ export default {
   methods: {
     init () {
       // 避免重复监听，或者将 on 功能写到一个统一的地方，只加载一次
-      this.$ipc.removeAllListeners(ipcApiRoute.printStatus);
-      this.$ipc.on(ipcApiRoute.printStatus, (event, result) => {
-        console.log('result', result);
-        this.$message.info('打印中...');
+      this.$ipc.removeAllListeners(ipcApiRoute.cameraStatus);
+      this.$ipc.on(ipcApiRoute.cameraStatus, (event, result) => {
+        const { phototakePath } = result
+        this.savePath = phototakePath
       })
     },    
     async getCamera () {
