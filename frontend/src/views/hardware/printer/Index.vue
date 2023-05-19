@@ -9,14 +9,10 @@
       <a-button @click="getPrinter()"> 获取打印机列表 </a-button>
     </div>
     <div class="one-block-2">
-      <a-list size="small" bordered :data-source="printerList">
-        <a-list-item slot="renderItem" slot-scope="item">
-          {{ item.displayName }} {{ defaultDevice(item) }}
-        </a-list-item>
-        <div slot="header">
+      <div>
           设备列表
         </div>
-      </a-list>
+      <div v-for="item, index in printerList" :key="index">{{ item.displayName }} {{ defaultDevice(item) }}</div>
     </div>
     <div class="one-block-1">
       <span>
@@ -29,11 +25,14 @@
   </div>
 </template>
 <script>
+import { defineComponent, inject, reactive, toRefs, onMounted } from 'vue'
 import { ipcApiRoute } from '@/api/main'
 
-export default {
-  data() {
-    return {
+export default defineComponent({
+  setup() {
+    const $ipc = inject('$ipc')
+    console.log($ipc, '$ipc')
+    const dataMap = reactive({
       defaultDeviceName: '',
       printerList: [],
       views: [
@@ -42,44 +41,48 @@ export default {
           content: '/public/html/view_example.html'
         },        
       ],
-    };
-  },
-  mounted () {
-    this.init();
-  },  
-  methods: {
-    init () {
-      // 避免重复监听，或者将 on 功能写到一个统一的地方，只加载一次
-      this.$ipc.removeAllListeners(ipcApiRoute.printStatus);
-      this.$ipc.on(ipcApiRoute.printStatus, (event, result) => {
-        console.log('result', result);
-        this.$message.info('打印中...');
-      })
-    },    
-    getPrinter () {
-      this.$ipc.invoke(ipcApiRoute.getPrinterList, {}).then(res => {
-        this.printerList = res;
-      }) 
-    },
-    doPrint (index) {
-      console.log('defaultDeviceName:', this.defaultDeviceName)
-      const params = {
-        view: this.views[index],
-        deviceName: this.defaultDeviceName
-      };
-      this.$ipc.send(ipcApiRoute.print, params)
-    },
-    defaultDevice (item) {
-      let desc = "";
-      if (item.isDefault) {
-        desc = "- 默认";
-        this.defaultDeviceName = item.name;
-      }
-      
-      return desc;
-    } 
+    })
+    const methods = {
+      init () {
+        // 避免重复监听，或者将 on 功能写到一个统一的地方，只加载一次
+        $ipc.removeAllListeners(ipcApiRoute.printStatus);
+        $ipc.on(ipcApiRoute.printStatus, (event, result) => {
+          console.log('result', result);
+        })
+      },    
+      getPrinter () {
+        console.log($ipc, '$ipc')
+        $ipc.invoke(ipcApiRoute.getPrinterList, {}).then(res => {
+          dataMap.printerList = res;
+        }) 
+      },
+      doPrint (index) {
+        console.log('defaultDeviceName:', dataMap.defaultDeviceName)
+        const params = {
+          view: dataMap.views[index],
+          deviceName: dataMap.defaultDeviceName
+        };
+        $ipc.send(ipcApiRoute.print, JSON.stringify(params))
+      },
+      defaultDevice (item) {
+        let desc = "";
+        if (item.isDefault) {
+          desc = "- 默认";
+          dataMap.defaultDeviceName = item.name;
+        }
+        
+        return desc;
+      } 
+    }
+    onMounted(() => {
+      methods.init()
+    })
+    return {
+      ...toRefs(dataMap),
+      ...methods
+    }
   }
-};
+})
 </script>
 <style lang="less" scoped>
 #app-hw-bluetooth {

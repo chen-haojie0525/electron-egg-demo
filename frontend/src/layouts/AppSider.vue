@@ -32,10 +32,11 @@ export default {
       current: '',
       menu: {
         'menu_1' : {
-          icon: 'home',
-          title: '框架',
-          pageName: 'Framework',
+          icon: 'control',
+          title: '硬件',
+          pageName: 'Hardware',
           params: {},
+          
         },
         'menu_2' : {
           icon: 'desktop',
@@ -44,9 +45,9 @@ export default {
           params: {},
         },
         'menu_3' : {
-          icon: 'control',
-          title: '硬件',
-          pageName: 'Hardware',
+          icon: 'home',
+          title: '框架',
+          pageName: 'Framework',
           params: {},
         },
         'menu_4' : {

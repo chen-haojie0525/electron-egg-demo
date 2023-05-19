@@ -1,23 +1,12 @@
-import Vue from 'vue'
-import antd from 'ant-design-vue'
-import 'ant-design-vue/dist/antd.less';
-import App from './App'
+import { createApp } from 'vue'
+import App from './App.vue'
 import router from './router'
-import { VueAxios } from './utils/request'
+import store from './store'
 import { ipc } from '@/utils/ipcRenderer'
 
-// 使用antd
-Vue.use(antd)
+const app = createApp(App)
+app.provide("$ipc",ipc)
+console.log(ipc, 'ipcipc')
 
-// mount axios to `Vue.$http` and `this.$http`
-Vue.use(VueAxios)
-
-// 全局注入IPC通信
-Vue.prototype.$ipc = ipc
-
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
+app.use(store).use(router)
+.mount('#app')
