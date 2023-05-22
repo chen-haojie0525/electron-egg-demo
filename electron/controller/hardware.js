@@ -30,7 +30,7 @@ class HardwareController extends Controller {
    * 打印
    */
   print (args, event) {
-    const { view, deviceName } = args;
+    const { view, deviceName } = JSON.parse(args);
     let content = null;
     if (view.type == 'html') {
       content = path.join('file://', Ps.getHomeDir(), view.content)
