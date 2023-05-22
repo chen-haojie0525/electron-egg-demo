@@ -58,10 +58,18 @@ const permission: AppRouteModule = {
       name: 'Menu2Demo',
       component: () => import('/@/views/demo/level/Menu2.vue'),
       meta: {
-        title: 'Menu2',
+        title: '打印机',
         // ignoreKeepAlive: true,
       },
     },
+    {
+      path: 'menu3',
+      name: 'Menu3Demo',
+      component: () => import('/@/views/demo/level/Menu3.vue'),
+      meta: {
+        title: '摄像头'
+      },
+    }
   ],
 };
 

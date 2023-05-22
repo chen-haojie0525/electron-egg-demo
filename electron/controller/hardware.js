@@ -2,6 +2,8 @@
 
 const { Controller } = require('ee-core');
 const path = require('path');
+const os = require('os');
+const fs = require('fs');
 const Ps = require('ee-core/ps');
 const Electron = require('ee-core/electron');
 
@@ -63,6 +65,25 @@ class HardwareController extends Controller {
       });
     });
 
+    return true;
+  }  
+  /**
+ * 保存图片
+ */
+  saveImg (args, event) {
+    const { imgBase64 } = args;
+    const base64 = imgBase64.replace(/^data:image\/\w+;base64,/, '')
+    const dataBuffer = Buffer.from(base64, 'base64')
+    const phototakePath = path.join(os.tmpdir(), 'phototaketemp.png')
+    fs.writeFile(phototakePath, dataBuffer, err => {
+      if (err) {
+        console.log('takePhoto faild')
+      } else {
+        console.log('photo is successfully saved, path:' + phototakePath)
+        const channel = 'controller.hardware.cameraStatus';
+        event.reply(`${channel}`, { phototakePath });
+      }
+    })
     return true;
   }  
 }
